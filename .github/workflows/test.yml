@@ -1,0 +1,21 @@
+- name: Workflow Dispatch
+  # You may pin to the exact commit or the version.
+  # uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4
+  uses: benc-uk/workflow-dispatch@v1.3.1
+  with:
+    # Name, filename or ID of workflow to run
+    workflow: 
+    # GitHub token with repo write access, only required if the workflow is in a different repository
+    token: # optional, default is ${{ github.token }}
+    # Inputs to pass to the workflow, must be a JSON string
+    inputs: # optional
+    # The reference can be a branch, tag, or a commit SHA
+    ref: # optional, default is ${{ github.head_ref || github.ref }}
+    # Repo owner & name, slash separated, only set if invoking a workflow in a different repo
+    repo: # optional
+    # Whether to wait for the workflow run to complete before finishing this action
+    wait-for-completion: # optional
+    # Maximum time in seconds to wait for the workflow run to complete before timing out (only applies if wait-for-completion is true)
+    wait-timeout-seconds: # optional, default is 900
+    # Whether to set the status of this action to failed if the triggered workflow run fails, or is cancelled. Only applies if wait-for-completion is true.
+    sync-status: # optional
