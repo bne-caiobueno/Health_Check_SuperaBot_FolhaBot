@@ -1,21 +1,38 @@
-- name: Workflow Dispatch
-  # You may pin to the exact commit or the version.
-  # uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4
-  uses: benc-uk/workflow-dispatch@v1.3.1
-  with:
-    # Name, filename or ID of workflow to run
-    workflow: 
-    # GitHub token with repo write access, only required if the workflow is in a different repository
-    token: # optional, default is ${{ github.token }}
-    # Inputs to pass to the workflow, must be a JSON string
-    inputs: # optional
-    # The reference can be a branch, tag, or a commit SHA
-    ref: # optional, default is ${{ github.head_ref || github.ref }}
-    # Repo owner & name, slash separated, only set if invoking a workflow in a different repo
-    repo: # optional
-    # Whether to wait for the workflow run to complete before finishing this action
-    wait-for-completion: # optional
-    # Maximum time in seconds to wait for the workflow run to complete before timing out (only applies if wait-for-completion is true)
-    wait-timeout-seconds: # optional, default is 900
-    # Whether to set the status of this action to failed if the triggered workflow run fails, or is cancelled. Only applies if wait-for-completion is true.
-    sync-status: # optional
+name: Teste Diario do APK
+
+on:
+  workflow_dispatch: # Permite acionar o teste manualmente ou via API (n8n)
+
+jobs:
+  maestro-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do seu repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o Java (necessário para o emulador e ferramentas Android)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Instala a ferramenta de teste (Maestro)
+      - name: Install Maestro
+        run: |
+          curl -FsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      # 4. Inicia o emulador Android e executa o teste
+      - name: Run Android Emulator and Maestro
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: Nexus 6
+          script: |
+            adb install app/seu-app.apk
+            maestro test .github/workflows/flow.yaml
