@@ -34,5 +34,5 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           script: |
-            adb install app/seu-app.apk
+            adb install app/FolhaBot_1.0.39.apk
             maestro test .github/workflows/flow.yaml
